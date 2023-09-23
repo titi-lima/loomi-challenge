@@ -79,7 +79,8 @@ export default function Home() {
               />
               <Button
                 type={"submit"}
-                colorScheme={"purple"}
+                bgColor={"primary"}
+                color={"white"}
                 isLoading={formState.isSubmitting}
               >
                 Entrar
