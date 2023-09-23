@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider, Flex, extendTheme } from "@chakra-ui/react";
+import { background } from "@/assets";
 import type { AppProps } from "next/app";
 import { Sen } from "next/font/google";
 const font = Sen({ subsets: ["latin"] });
@@ -24,9 +25,13 @@ const theme = extendTheme({
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
-      <main className={font.className}>
+      <Flex
+        flex={1}
+        backgroundImage={background.src}
+        className={font.className}
+      >
         <Component {...pageProps} />
-      </main>
+      </Flex>
     </ChakraProvider>
   );
 }
