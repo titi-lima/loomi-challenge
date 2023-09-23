@@ -3,7 +3,7 @@ import { Flex, Box, Button, Container, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { FormInput } from "@/components";
 import Image from "next/image";
-import { logo } from "@/assets";
+import { background, logo } from "@/assets";
 
 export default function Home() {
   const { register, handleSubmit, formState } = useForm();
@@ -21,7 +21,7 @@ export default function Home() {
         display={"flex"}
         flex={1}
         maxWidth={"auto"}
-        bgColor={"gray.100"}
+        backgroundImage={background.src}
       >
         <Flex flex={1} height={"100vh"} justifyContent={"center"}>
           <Flex
