@@ -26,9 +26,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
       <Flex
-        flex={1}
         backgroundImage={background.src}
         className={font.className}
+        direction="column"
+        height="100vh"
       >
         <Component {...pageProps} />
       </Flex>
