@@ -3,6 +3,9 @@ import {
   FormLabel,
   Input,
   FormErrorMessage,
+  InputRightElement,
+  InputGroup,
+  IconButton,
 } from "@chakra-ui/react";
 import React from "react";
 import {
@@ -11,6 +14,8 @@ import {
   type UseFormRegister,
   type RegisterOptions,
 } from "react-hook-form";
+
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 type FormInputProps = {
   register: UseFormRegister<FieldValues>;
@@ -33,6 +38,7 @@ const FormInput = ({
   isRequired = false,
   placeholder = label,
 }: FormInputProps) => {
+  const [typeState, setTypeState] = React.useState(type || "text");
   return (
     <FormControl
       isInvalid={!!formState.errors[field]}
@@ -42,17 +48,31 @@ const FormInput = ({
       <FormLabel htmlFor={field} textIndent={"16px"}>
         {label}
       </FormLabel>
-      <Input
-        bgColor={"gray.100"}
-        {...register(field, {
-          required: `${isRequired ? "Campo obrigatório." : ""}`,
-          ...options,
-        })}
-        isRequired={isRequired}
-        placeholder={placeholder}
-        type={type}
-        width={"40ch"}
-      />
+      <InputGroup>
+        <Input
+          bgColor={"gray.100"}
+          {...register(field, {
+            required: `${isRequired ? "Campo obrigatório." : ""}`,
+            ...options,
+          })}
+          isRequired={isRequired}
+          placeholder={placeholder}
+          type={typeState}
+          width={"40ch"}
+        />
+        <InputRightElement>
+          {label === "Senha" && (
+            <IconButton
+              aria-label="Mostrar senha"
+              icon={typeState === "password" ? <ViewIcon /> : <ViewOffIcon />}
+              onClick={() => {
+                setTypeState(typeState === "text" ? "password" : "text");
+              }}
+              variant={"unstyled"}
+            />
+          )}
+        </InputRightElement>
+      </InputGroup>
       <FormErrorMessage>
         {formState.errors[field]?.message as string}
       </FormErrorMessage>
