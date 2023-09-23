@@ -1,7 +1,9 @@
 import Head from "next/head";
-import { Flex, Box, Button, Container } from "@chakra-ui/react";
+import { Flex, Box, Button, Container, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { FormInput } from "@/components";
+import Image from "next/image";
+import { logo } from "@/assets";
 
 export default function Home() {
   const { register, handleSubmit, formState } = useForm();
@@ -26,8 +28,19 @@ export default function Home() {
             flex={0.5}
             flexDirection={"column"}
             alignItems={"center"}
+            justifyContent={"center"}
             bgColor={"white"}
           >
+            <Image
+              src={logo}
+              alt="Loomi"
+              width={200}
+              height={200}
+              objectFit={"contain"}
+            />
+            <Text as={"h1"} fontSize={"20"} fontWeight={"500"} m={8}>
+              Entrar na plataforma
+            </Text>
             <Box
               as={"form"}
               onSubmit={handleSubmit(onSubmit)}
@@ -35,7 +48,6 @@ export default function Home() {
               flexDirection={"column"}
               alignItems={"center"}
               justifyContent={"center"}
-              flex={1}
             >
               <FormInput
                 register={register}

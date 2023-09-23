@@ -45,7 +45,7 @@ const FormInput = ({
       mb={8}
       flexDirection={"column"}
     >
-      <FormLabel htmlFor={field} textIndent={"16px"}>
+      <FormLabel htmlFor={field} textIndent={"16px"} fontSize={14}>
         {label}
       </FormLabel>
       <InputGroup>
