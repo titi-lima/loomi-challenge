@@ -59,6 +59,7 @@ const FormInput = ({
           placeholder={placeholder}
           type={typeState}
           width={"40ch"}
+          border={"none"}
         />
         <InputRightElement>
           {label === "Senha" && (
