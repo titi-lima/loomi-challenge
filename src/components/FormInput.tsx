@@ -28,6 +28,7 @@ type FormInputProps = {
   type?: React.HTMLInputTypeAttribute;
   options?: RegisterOptions<FieldValues>;
   labelPosition?: "left" | "top";
+  height?: React.CSSProperties["height"];
 };
 
 const FormInput = ({
@@ -36,10 +37,11 @@ const FormInput = ({
   field,
   type,
   label,
-  options,
+  options = {},
   isRequired = false,
   placeholder = label,
   labelPosition = "top",
+  height = undefined,
 }: FormInputProps) => {
   const [typeState, setTypeState] = React.useState(type || "text");
   return (
@@ -72,6 +74,7 @@ const FormInput = ({
             placeholder={placeholder}
             type={typeState}
             border={"none"}
+            height={height}
           />
           <InputRightElement>
             {label === "Senha" && (
