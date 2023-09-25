@@ -54,8 +54,84 @@ const ESPECIFICACOES_FORM_FIELDS: FormValues[] = [
   },
 ];
 
+type ItemProps = {
+  register: ReturnType<typeof useForm>["register"];
+  formState: ReturnType<typeof useForm>["formState"];
+  control: ReturnType<typeof useForm>["control"];
+  index: number;
+};
+
+const Item = ({ register, formState, control, index }: ItemProps) => {
+  return (
+    <>
+      <Flex>
+        <Heading as="h5" size="sm" mb={8} width={"5rem"} lineHeight={"0"}>
+          Item {index + 1 > 9 ? index + 1 : `0${index + 1}`}
+        </Heading>
+        <Divider />
+      </Flex>
+      <Box width={400}>
+        <FormInput
+          field="code" //TODO: find how to make this dynamic in a array
+          label="Código:"
+          placeholder=""
+          register={register}
+          formState={formState}
+          labelPosition="left"
+          isRequired
+        />
+        <FormSelect control={control} name="color" label="Cor:" isRequired />
+        <Flex gap={3} mt={8}>
+          <Text mr={5}>Tamanho:</Text>
+          <FormInput
+            field="width"
+            placeholder=""
+            register={register}
+            formState={formState}
+            labelPosition="left"
+            type="number"
+            isRequired
+          />
+          <Text whiteSpace={"nowrap"} lineHeight={10}>
+            m x
+          </Text>
+          <FormInput
+            field="height"
+            placeholder=""
+            register={register}
+            formState={formState}
+            type="number"
+            isRequired
+          />
+          <Text whiteSpace={"nowrap"} lineHeight={10}>
+            m x
+          </Text>
+          <FormInput
+            field="depth"
+            placeholder=""
+            register={register}
+            formState={formState}
+            type="number"
+            isRequired
+          />
+        </Flex>
+      </Box>
+    </>
+  );
+};
+
 export default function AddProduct() {
   const { register, handleSubmit, formState, control } = useForm();
+  const [items, setItems] = React.useState([
+    <Item
+      key={1}
+      register={register}
+      formState={formState}
+      control={control}
+      index={0}
+    />,
+  ]);
+
   return (
     <>
       <Navbar />
@@ -146,67 +222,26 @@ export default function AddProduct() {
               <Heading as="h4" size="md" mb={8}>
                 Itens
               </Heading>
-              <Button variant={"unstyled"} fontSize={18}>
+              <Button
+                variant={"unstyled"}
+                fontSize={18}
+                onClick={() => {
+                  setItems([
+                    ...items,
+                    <Item
+                      key={items.length + 1}
+                      register={register}
+                      formState={formState}
+                      control={control}
+                      index={items.length}
+                    />,
+                  ]);
+                }}
+              >
                 + Adicionar
               </Button>
             </Flex>
-            <Flex>
-              <Heading as="h5" size="sm" mb={8} width={"5rem"} lineHeight={"0"}>
-                Item 01
-              </Heading>
-              <Divider />
-            </Flex>
-            <Box width={400}>
-              <FormInput
-                field="code"
-                label="Código:"
-                placeholder=""
-                register={register}
-                formState={formState}
-                labelPosition="left"
-                isRequired
-              />
-              <FormSelect
-                control={control}
-                name="color"
-                label="Cor:"
-                isRequired
-              />
-              <Flex gap={3} mt={8}>
-                <Text mr={5}>Tamanho:</Text>
-                <FormInput
-                  field="width"
-                  placeholder=""
-                  register={register}
-                  formState={formState}
-                  labelPosition="left"
-                  type="number"
-                  isRequired
-                />
-                <Text whiteSpace={"nowrap"} lineHeight={10}>
-                  m x
-                </Text>
-                <FormInput
-                  field="height"
-                  placeholder=""
-                  register={register}
-                  formState={formState}
-                  type="number"
-                  isRequired
-                />
-                <Text whiteSpace={"nowrap"} lineHeight={10}>
-                  m x
-                </Text>
-                <FormInput
-                  field="depth"
-                  placeholder=""
-                  register={register}
-                  formState={formState}
-                  type="number"
-                  isRequired
-                />
-              </Flex>
-            </Box>
+            {items.map((item) => item)}
           </Box>
           <Flex justifyContent={"flex-end"} gap={4} mt={8}>
             <Button
