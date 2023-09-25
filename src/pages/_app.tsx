@@ -27,9 +27,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     <ChakraProvider theme={theme}>
       <Flex
         backgroundImage={background.src}
+        backgroundRepeat={"repeat"}
+        backgroundColor={"gray.100"}
         className={font.className}
         direction="column"
-        height="100vh"
+        minHeight="100vh"
       >
         <Component {...pageProps} />
       </Flex>
