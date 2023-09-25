@@ -6,6 +6,7 @@ import {
   InputRightElement,
   InputGroup,
   IconButton,
+  Flex,
 } from "@chakra-ui/react";
 import React from "react";
 import {
@@ -21,11 +22,13 @@ type FormInputProps = {
   register: UseFormRegister<FieldValues>;
   formState: FormState<FieldValues>;
   field: string;
-  label: string;
+  label?: string;
   isRequired?: boolean;
   placeholder?: string;
   type?: React.HTMLInputTypeAttribute;
   options?: RegisterOptions<FieldValues>;
+  labelPosition?: "left" | "top";
+  height?: React.CSSProperties["height"];
 };
 
 const FormInput = ({
@@ -34,9 +37,11 @@ const FormInput = ({
   field,
   type,
   label,
-  options,
+  options = {},
   isRequired = false,
   placeholder = label,
+  labelPosition = "top",
+  height = undefined,
 }: FormInputProps) => {
   const [typeState, setTypeState] = React.useState(type || "text");
   return (
@@ -45,35 +50,48 @@ const FormInput = ({
       mb={8}
       flexDirection={"column"}
     >
-      <FormLabel htmlFor={field} textIndent={"16px"} fontSize={14}>
-        {label}
-      </FormLabel>
-      <InputGroup>
-        <Input
-          bgColor={"gray.100"}
-          {...register(field, {
-            required: `${isRequired ? "Campo obrigatório." : ""}`,
-            ...options,
-          })}
-          isRequired={isRequired}
-          placeholder={placeholder}
-          type={typeState}
-          width={"40ch"}
-          border={"none"}
-        />
-        <InputRightElement>
+      <Flex
+        direction={labelPosition === "left" ? "row" : "column"}
+        alignItems={labelPosition === "left" ? "center" : "flex-start"}
+      >
+        {label && (
+          <FormLabel
+            htmlFor={field}
+            textIndent={labelPosition === "left" ? 0 : "16px"}
+            width={labelPosition === "left" ? "136px" : "auto"}
+            fontSize={14}
+            verticalAlign={"middle"}
+          >
+            {label}
+          </FormLabel>
+        )}
+        <InputGroup>
+          <Input
+            bgColor={"gray.100"}
+            {...register(field, {
+              required: `${isRequired ? "Campo obrigatório." : ""}`,
+              ...options,
+            })}
+            isRequired={isRequired}
+            placeholder={placeholder}
+            type={typeState}
+            border={"none"}
+            height={height}
+          />
           {label === "Senha" && (
-            <IconButton
-              aria-label="Mostrar senha"
-              icon={typeState === "password" ? <ViewIcon /> : <ViewOffIcon />}
-              onClick={() => {
-                setTypeState(typeState === "text" ? "password" : "text");
-              }}
-              variant={"unstyled"}
-            />
+            <InputRightElement>
+              <IconButton
+                aria-label="Mostrar senha"
+                icon={typeState === "password" ? <ViewIcon /> : <ViewOffIcon />}
+                onClick={() => {
+                  setTypeState(typeState === "text" ? "password" : "text");
+                }}
+                variant={"unstyled"}
+              />
+            </InputRightElement>
           )}
-        </InputRightElement>
-      </InputGroup>
+        </InputGroup>
+      </Flex>
       <FormErrorMessage>
         {formState.errors[field]?.message as string}
       </FormErrorMessage>

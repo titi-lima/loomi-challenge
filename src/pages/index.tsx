@@ -25,13 +25,7 @@ export default function Home() {
           justifyContent={"center"}
           bgColor={"white"}
         >
-          <Image
-            src={logo}
-            alt="Loomi"
-            width={200}
-            height={200}
-            objectFit={"contain"}
-          />
+          <Image src={logo} alt="Loomi" width={200} height={200} />
           <Text as={"h1"} fontSize={"20"} fontWeight={"500"} m={8}>
             Entrar na plataforma
           </Text>
