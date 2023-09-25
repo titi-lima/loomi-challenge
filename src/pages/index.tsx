@@ -60,8 +60,8 @@ export default function Home() {
               isRequired
               options={{
                 minLength: {
-                  value: 6,
-                  message: "A senha deve ter no mínimo 6 caracteres.",
+                  value: 4,
+                  message: "A senha deve ter no mínimo 4 caracteres.",
                 },
               }}
             />
