@@ -1,13 +1,31 @@
 import Head from "next/head";
-import { Flex, Box, Button, Text } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
+import { Flex, Box, Button, Text, Spinner } from "@chakra-ui/react";
+import { FieldValues, set, useForm } from "react-hook-form";
 import { FormInput } from "@/components";
 import { logo } from "@/assets";
 import Image from "next/image";
+import { api } from "@/services";
+import { setCookie } from "cookies-next";
+import { useRouter } from "next/router";
+import React from "react";
 
 export default function Home() {
+  const [isLoading, setIsLoading] = React.useState(false);
   const { register, handleSubmit, formState } = useForm();
-  const onSubmit = (data: any) => console.log(data);
+  const router = useRouter();
+  const onSubmit = async (data: FieldValues) => {
+    setIsLoading(true);
+    try {
+      const response = await api.post("/login", { body: data });
+      setCookie("token", response.data["access-token"]);
+      // save user data to localStorage
+      router.push("/home");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
@@ -31,7 +49,7 @@ export default function Home() {
           </Text>
           <Box
             as={"form"}
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(async (data) => await onSubmit(data))}
             display={"flex"}
             flexDirection={"column"}
             alignItems={"center"}
@@ -72,7 +90,7 @@ export default function Home() {
               w={24}
               h={8}
             >
-              Entrar
+              {isLoading ? <Spinner /> : "Entrar"}
             </Button>
           </Box>
         </Flex>
