@@ -1,5 +1,6 @@
 import { FormInput, FormSelect, Navbar, Sidebar } from "@/components";
 import { Box, Button, Divider, Flex, Heading, Text } from "@chakra-ui/react";
+import { type GetServerSidePropsContext } from "next";
 import React from "react";
 import { useForm } from "react-hook-form";
 
@@ -273,4 +274,21 @@ export default function AddProduct() {
       </Box>
     </>
   );
+}
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const token = ctx.req?.cookies?.token;
+  // TODO: verify the token is valid
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
 }
