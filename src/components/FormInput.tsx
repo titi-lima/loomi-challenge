@@ -22,7 +22,7 @@ type FormInputProps = {
   register: UseFormRegister<FieldValues>;
   formState: FormState<FieldValues>;
   field: string;
-  label: string;
+  label?: string;
   isRequired?: boolean;
   placeholder?: string;
   type?: React.HTMLInputTypeAttribute;
@@ -54,15 +54,17 @@ const FormInput = ({
         direction={labelPosition === "left" ? "row" : "column"}
         alignItems={labelPosition === "left" ? "center" : "flex-start"}
       >
-        <FormLabel
-          htmlFor={field}
-          textIndent={labelPosition === "left" ? 0 : "16px"}
-          width={labelPosition === "left" ? "136px" : "auto"}
-          fontSize={14}
-          verticalAlign={"middle"}
-        >
-          {label}
-        </FormLabel>
+        {label && (
+          <FormLabel
+            htmlFor={field}
+            textIndent={labelPosition === "left" ? 0 : "16px"}
+            width={labelPosition === "left" ? "136px" : "auto"}
+            fontSize={14}
+            verticalAlign={"middle"}
+          >
+            {label}
+          </FormLabel>
+        )}
         <InputGroup>
           <Input
             bgColor={"gray.100"}
@@ -76,8 +78,8 @@ const FormInput = ({
             border={"none"}
             height={height}
           />
-          <InputRightElement>
-            {label === "Senha" && (
+          {label === "Senha" && (
+            <InputRightElement>
               <IconButton
                 aria-label="Mostrar senha"
                 icon={typeState === "password" ? <ViewIcon /> : <ViewOffIcon />}
@@ -86,8 +88,8 @@ const FormInput = ({
                 }}
                 variant={"unstyled"}
               />
-            )}
-          </InputRightElement>
+            </InputRightElement>
+          )}
         </InputGroup>
       </Flex>
       <FormErrorMessage>
