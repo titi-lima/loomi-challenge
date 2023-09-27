@@ -1,7 +1,16 @@
 import { GraphContainer, HomeInfos, Navbar, Sidebar } from "@/components";
 import { api } from "@/services";
-import { ChevronRightIcon } from "@chakra-ui/icons";
-import { Heading, Flex, Box, Text, Divider } from "@chakra-ui/react";
+import { ChevronRightIcon, SearchIcon } from "@chakra-ui/icons";
+import {
+  Heading,
+  Flex,
+  Box,
+  Text,
+  Divider,
+  Input,
+  InputGroup,
+  InputRightAddon,
+} from "@chakra-ui/react";
 import { InferGetServerSidePropsType } from "next";
 import {
   ComposedChart,
@@ -414,6 +423,39 @@ export default function Home({
                   </ComposedChart>
                 </ResponsiveContainer>
               </GraphContainer>
+            </Flex>
+          </Box>
+          <Box width={"92%"} bgColor={"#fff"} borderRadius={20} mt={14}>
+            <Flex justifyContent={"space-between"} alignItems={"center"} p={5}>
+              <Heading
+                as="h4"
+                fontWeight={"medium"}
+                size="lg"
+                color={"#333333"}
+                p={4}
+              >
+                Listagem de Produtos
+              </Heading>
+              <InputGroup width={"fit-content"}>
+                <Input
+                  placeholder="Pesquisar"
+                  bg={"#F5F5F5"}
+                  width={300}
+                  height={50}
+                  fontSize={20}
+                  px={5}
+                  border={"none"}
+                />
+                <InputRightAddon
+                  height={50}
+                  width={50}
+                  bg={"#F5F5F5"}
+                  border={"none"}
+                  _hover={{ cursor: "pointer" }}
+                >
+                  <SearchIcon color={"#333333"} fontSize={20} />
+                </InputRightAddon>
+              </InputGroup>
             </Flex>
           </Box>
         </Box>
