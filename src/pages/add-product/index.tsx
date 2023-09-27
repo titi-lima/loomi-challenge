@@ -276,7 +276,3 @@ export default function AddProduct() {
     </>
   );
 }
-
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  return ensureUserLoggedIn(ctx.req?.cookies?.token);
-}
