@@ -56,7 +56,7 @@ const HomeInfos = ({
       <Text color={color} fontSize={14}>
         {subtitle}
       </Text>
-      <Flex m={subtitle ? 2 : "22px 8px 8px 8px"} alignItems={"center"}>
+      <Flex m={subtitle ? 2 : "40px 8px 8px 8px"} alignItems={"center"}>
         {isMoney ? (
           <>
             <Text fontSize={16}>{valueHelper}</Text>
