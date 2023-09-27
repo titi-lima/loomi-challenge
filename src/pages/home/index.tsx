@@ -1,9 +1,18 @@
 import { GraphContainer, HomeInfos, Navbar, Sidebar } from "@/components";
 import { api } from "@/services";
 import { ChevronRightIcon } from "@chakra-ui/icons";
-import { Heading, Flex, Box } from "@chakra-ui/react";
+import { Heading, Flex, Box, Text, Divider } from "@chakra-ui/react";
 import { InferGetServerSidePropsType } from "next";
-import { Bar, BarChart, ResponsiveContainer, XAxis } from "recharts";
+import {
+  ComposedChart,
+  Line,
+  Bar,
+  XAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  BarChart,
+} from "recharts";
 import React from "react";
 
 const MONTHS = [
@@ -21,6 +30,11 @@ const MONTHS = [
   "Dez",
 ];
 
+const TRANSLATIONS = {
+  value: "Real",
+  expectation: "Expectativa",
+};
+
 export default function Home({
   dailyAverage,
   monthOrders,
@@ -35,6 +49,18 @@ export default function Home({
   const [firstYear, setFirstYear] = React.useState("");
   const [secondYear, setSecondYear] = React.useState("");
   const [thirdYear, setThirdYear] = React.useState("");
+
+  const profitData = React.useMemo(() => {
+    const data = [];
+    for (let i = 0; i < 12; i++) {
+      data.push({
+        month: i,
+        value: profitPerMonth?.[i]?.value,
+        expectation: profitExpectationPerMonth[i]?.value,
+      });
+    }
+    return data;
+  }, [profitPerMonth, profitExpectationPerMonth]);
 
   React.useEffect(() => {
     console.log("a filter could be applied here");
@@ -158,6 +184,105 @@ export default function Home({
                     }}
                   />
                 </BarChart>
+              </ResponsiveContainer>
+            </GraphContainer>
+            <GraphContainer
+              title="Expectativa de lucro x lucro real"
+              width={608}
+              setYear={setSecondYear}
+            >
+              <ResponsiveContainer width={"90%"} height={300}>
+                <ComposedChart data={profitData}>
+                  <XAxis
+                    dataKey="month"
+                    tickFormatter={(value) => MONTHS[+value]}
+                    type="category"
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    formatter={(value: number) =>
+                      new Intl.NumberFormat("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      }).format(value)
+                    }
+                    content={(props) => {
+                      return (
+                        <Box
+                          bg={"#fff"}
+                          boxShadow={"0px 0px 10px #00000026"}
+                          borderRadius={5}
+                          p={2}
+                        >
+                          <Flex justifyContent={"space-between"} my={1}>
+                            <Text
+                              fontSize={14}
+                              fontWeight={"light"}
+                              fontStyle={"italic"}
+                            >
+                              Mês atual:{" "}
+                            </Text>
+                            <Text fontWeight={"bold"} fontSize={14}>
+                              {MONTHS[props.label]}
+                            </Text>
+                          </Flex>
+                          <Text fontSize={12}>
+                            Real:{" "}
+                            {new Intl.NumberFormat("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            }).format(props?.payload?.[0]?.payload?.value)}
+                            <Divider my={1} />
+                            Expectativa:{" "}
+                            {new Intl.NumberFormat("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            }).format(
+                              props?.payload?.[0]?.payload?.expectation
+                            )}
+                          </Text>
+                        </Box>
+                      );
+                    }}
+                  />
+                  <Legend
+                    verticalAlign="top"
+                    formatter={(value: keyof typeof TRANSLATIONS) => (
+                      <Text as="span" color={"#000"}>
+                        {TRANSLATIONS[value]}
+                      </Text>
+                    )}
+                  />
+                  <Bar
+                    dataKey="value"
+                    barSize={20}
+                    fill="#9DD6D3"
+                    shape={(props) => {
+                      return (
+                        <rect
+                          rx={3}
+                          width={props.width}
+                          height={props.height}
+                          x={props.x}
+                          y={props.y}
+                          fill={"#9DD6D3"}
+                          style={{
+                            filter: "drop-shadow(0px 0px 10px #00000026",
+                          }}
+                        />
+                      );
+                    }}
+                  />
+
+                  <Line
+                    type="linear"
+                    dataKey="expectation"
+                    fill="#fff"
+                    stroke="#393C56"
+                    strokeWidth={2}
+                  />
+                </ComposedChart>
               </ResponsiveContainer>
             </GraphContainer>
           </Flex>
