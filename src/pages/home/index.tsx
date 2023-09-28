@@ -1,6 +1,10 @@
 import { GraphContainer, HomeInfos, Navbar, Sidebar } from "@/components";
 import { api } from "@/services";
-import { ChevronRightIcon, SearchIcon } from "@chakra-ui/icons";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  SearchIcon,
+} from "@chakra-ui/icons";
 import {
   Heading,
   Flex,
@@ -59,10 +63,36 @@ export default function Home({
   profitExpectationPerMonth,
   profitPerMonth,
   sellsPerMonth,
+  initialProducts,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [firstYear, setFirstYear] = React.useState("");
   const [secondYear, setSecondYear] = React.useState("");
   const [thirdYear, setThirdYear] = React.useState("");
+  const [page, setPage] = React.useState(1);
+  const [products, setProducts] = React.useState(initialProducts);
+  const [search, setSearch] = React.useState("");
+
+  React.useEffect(() => {
+    try {
+      api
+        .get<ApiProductReturn>(
+          `/products?page=${page}&limit=10&search=${search}`
+        )
+        .then((response) => {
+          setProducts(
+            response.data.map((product) => ({
+              name: product.name.split(" ")[2],
+              color: product.color,
+              status: product.status,
+              specification: product.name.split(" ").slice(0, 2),
+              id: product.id,
+            }))
+          );
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }, [page, search]);
 
   const profitData = React.useMemo(() => {
     const data = [];
@@ -426,13 +456,17 @@ export default function Home({
             </Flex>
           </Box>
           <Box width={"92%"} bgColor={"#fff"} borderRadius={20} mt={14}>
-            <Flex justifyContent={"space-between"} alignItems={"center"} p={5}>
+            <Flex
+              justifyContent={"space-between"}
+              alignItems={"center"}
+              pt={7}
+              mx={10}
+            >
               <Heading
                 as="h4"
-                fontWeight={"medium"}
+                fontWeight={"semibold"}
                 size="lg"
                 color={"#333333"}
-                p={4}
               >
                 Listagem de Produtos
               </Heading>
@@ -445,6 +479,7 @@ export default function Home({
                   fontSize={20}
                   px={5}
                   border={"none"}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
                 <InputRightAddon
                   height={50}
@@ -456,6 +491,120 @@ export default function Home({
                   <SearchIcon color={"#333333"} fontSize={20} />
                 </InputRightAddon>
               </InputGroup>
+            </Flex>
+            <Flex flex={1} flexDirection={"column"}>
+              <Flex flex={1}>
+                <Flex
+                  direction={"column"}
+                  bgColor={"#4E5D66"}
+                  borderRadius={9}
+                  flex={3}
+                  padding={3}
+                  fontWeight={"bold"}
+                  textIndent={"32px"}
+                  m={10}
+                  color={"white"}
+                >
+                  <Text>PRODUTO</Text>
+                </Flex>
+                <Flex
+                  bgColor={"#4E5D66"}
+                  borderRadius={9}
+                  flex={7}
+                  padding={3}
+                  fontWeight={"bold"}
+                  textIndent={"32px"}
+                  m={10}
+                  ml={0}
+                  color={"white"}
+                  alignItems={"center"}
+                >
+                  <Flex direction={"column"} flex={2.8}>
+                    <Text>CORES</Text>
+                  </Flex>
+                  <Divider my={2} orientation="vertical" />
+                  <Flex direction={"column"} flex={2.8}>
+                    <Text>ESPECIFICAÇÕES</Text>
+                  </Flex>
+                  <Divider my={2} orientation="vertical" />
+                  <Flex direction={"column"} flex={1.4}>
+                    <Text>STATUS</Text>
+                  </Flex>
+                </Flex>
+              </Flex>
+
+              {products?.map((product) => (
+                <Flex flex={1} gap={5} key={product.id}>
+                  <Flex
+                    direction={"column"}
+                    flex={3}
+                    px={3}
+                    textIndent={"32px"}
+                    fontSize={20}
+                    color={"#333333"}
+                  >
+                    <Text>{product.name}</Text>
+                    <Divider m={4} orientation="horizontal" />
+                  </Flex>
+                  <Flex direction={"column"} flex={7}>
+                    <Flex
+                      flex={7}
+                      px={3}
+                      fontSize={20}
+                      color={"#333333"}
+                      alignItems={"center"}
+                      ml={5}
+                      mr={5}
+                    >
+                      <Flex textIndent={"32px"} flex={2.8}>
+                        <Text fontSize={20}>{product.color}</Text>
+                      </Flex>
+                      <Divider my={2} orientation="vertical" />
+                      <Flex flex={2.6} flexWrap={"wrap"}>
+                        {product.specification.map((spec) => (
+                          <Box
+                            key={spec + product.name}
+                            bgColor={"#4e5d6620"}
+                            borderRadius={18}
+                            py={1}
+                            px={4}
+                            width={"fit-content"}
+                            ml={4}
+                          >
+                            <Text
+                              opacity={1}
+                              fontSize={12}
+                              fontWeight={"bold"}
+                              color={"#333333"}
+                            >
+                              {spec}
+                            </Text>
+                          </Box>
+                        ))}
+                      </Flex>
+                      <Divider my={2} orientation="vertical" />
+                      <Flex flex={1.45}>
+                        <Text textIndent={"32px"}>{product.status}</Text>
+                      </Flex>
+                    </Flex>
+                    <Divider m={4} w={"95%"} orientation="horizontal" />
+                  </Flex>
+                </Flex>
+              ))}
+            </Flex>
+            <Flex justifyContent={"flex-end"} p={8} gap={5}>
+              <ChevronLeftIcon
+                fontSize={20}
+                color={"#333333"}
+                _hover={{ cursor: "pointer" }}
+                onClick={() => setPage(page - 1)}
+              />
+              <ChevronRightIcon
+                fontSize={20}
+                color={"#333333"}
+                _hover={{ cursor: "pointer" }}
+                onClick={() => setPage(page + 1)}
+              />
             </Flex>
           </Box>
         </Box>
@@ -477,6 +626,14 @@ type ApiGraphReturn = {
   month: string;
   value: number;
 }[];
+type ApiProductReturn = {
+  createdAt: string;
+  name: string;
+  color: string;
+  status: string;
+  description: string;
+  id: string;
+}[];
 
 export const getServerSideProps = async () => {
   try {
@@ -495,6 +652,10 @@ export const getServerSideProps = async () => {
       "/canceled-orders-per-month"
     );
 
+    const productsPromise = api.get<ApiProductReturn>(
+      "/products?page=1&limit=10"
+    );
+
     const [
       dailyAverage,
       monthlyAverage,
@@ -505,6 +666,7 @@ export const getServerSideProps = async () => {
       profitPerMonth,
       ordersPerMonth,
       canceledOrdersPerMonth,
+      products,
     ] = await Promise.all([
       dailyAveragePromise,
       monthlyAveragePromise,
@@ -515,6 +677,7 @@ export const getServerSideProps = async () => {
       profitPerMonthPromise,
       ordersPerMonthPromise,
       canceledOrdersPerMonthPromise,
+      productsPromise,
     ]);
     return {
       props: {
@@ -527,6 +690,13 @@ export const getServerSideProps = async () => {
         profitPerMonth: profitPerMonth.data,
         ordersPerMonth: ordersPerMonth.data,
         canceledOrdersPerMonth: canceledOrdersPerMonth.data,
+        initialProducts: products.data.map((product) => ({
+          name: product.name.split(" ")[2],
+          color: product.color,
+          status: product.status,
+          specification: product.name.split(" ").slice(0, 2),
+          id: product.id,
+        })),
       },
     };
   } catch (error) {
@@ -551,6 +721,7 @@ export const getServerSideProps = async () => {
         profitPerMonth: [],
         ordersPerMonth: [],
         canceledOrdersPerMonth: [],
+        initialProducts: [],
       },
     };
   }
