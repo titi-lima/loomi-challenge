@@ -2,4 +2,6 @@ import FormInput from "./FormInput";
 import FormSelect from "./FormSelect";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
-export { FormInput, FormSelect, Sidebar, Navbar };
+import HomeInfos from "./HomeInfos";
+import GraphContainer from "./GraphContainer";
+export { FormInput, FormSelect, Sidebar, Navbar, HomeInfos, GraphContainer };

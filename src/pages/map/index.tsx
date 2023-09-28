@@ -5,7 +5,3 @@ import React from "react";
 export default function Map() {
   return <div>Map</div>;
 }
-
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  return ensureUserLoggedIn(ctx.req?.cookies?.token);
-}
