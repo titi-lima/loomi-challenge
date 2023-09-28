@@ -73,25 +73,22 @@ export default function Home({
   const [search, setSearch] = React.useState("");
 
   React.useEffect(() => {
-    try {
-      api
-        .get<ApiProductReturn>(
-          `/products?page=${page}&limit=10&search=${search}`
-        )
-        .then((response) => {
-          setProducts(
-            response.data.map((product) => ({
-              name: product.name.split(" ")[2],
-              color: product.color,
-              status: product.status,
-              specification: product.name.split(" ").slice(0, 2),
-              id: product.id,
-            }))
-          );
-        });
-    } catch (error) {
-      console.log(error);
-    }
+    api
+      .get<ApiProductReturn>(`/products?page=${page}&limit=10&search=${search}`)
+      .then((response) => {
+        setProducts(
+          response.data.map((product) => ({
+            name: product.name.split(" ")[2],
+            color: product.color,
+            status: product.status,
+            specification: product.name.split(" ").slice(0, 2),
+            id: product.id,
+          }))
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, [page, search]);
 
   const profitData = React.useMemo(() => {
