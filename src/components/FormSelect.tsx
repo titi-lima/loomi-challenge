@@ -29,7 +29,10 @@ type FormSelectProps = {
     }
   | {
       multiple?: false; // if multiple is false, there's no need to pass options.
-      options?: undefined;
+      options?: {
+        value: string;
+        label: string;
+      }[];
     }
 );
 

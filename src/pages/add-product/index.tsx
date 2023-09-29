@@ -1,7 +1,6 @@
 import { FormInput, FormSelect, Navbar, Sidebar } from "@/components";
-import { ensureUserLoggedIn } from "@/utils";
+import { api } from "@/services";
 import { Box, Button, Divider, Flex, Heading, Text } from "@chakra-ui/react";
-import { type GetServerSidePropsContext } from "next";
 import React from "react";
 import { useForm } from "react-hook-form";
 
@@ -26,7 +25,7 @@ const DETALHES_FORM_FIELDS: FormValues[] = [
     label: "ID:",
   },
   {
-    field: "code",
+    field: "productId",
     label: "Código:",
   },
   {
@@ -34,7 +33,7 @@ const DETALHES_FORM_FIELDS: FormValues[] = [
     label: "Vendedor:", //! Prototype says it should be "Seller:" here.
   },
   {
-    field: "deadline",
+    field: "deliveryDate",
     label: "Prazo de entrega:",
   },
 ];
@@ -45,12 +44,12 @@ const ESPECIFICACOES_FORM_FIELDS: FormValues[] = [
     label: "Subtítulo:",
   },
   {
-    field: "informations",
+    field: "specificationsInfo",
     label: "Informações:",
     height: "5rem",
   },
   {
-    field: "cleaning_care",
+    field: "specificationsCares",
     label: "Limpeza e Cuidados:",
     height: "5rem",
   },
@@ -82,7 +81,17 @@ const Item = ({ register, formState, control, index }: ItemProps) => {
           labelPosition="left"
           isRequired
         />
-        <FormSelect control={control} name="color" label="Cor:" isRequired />
+        <FormSelect
+          control={control}
+          name="color"
+          label="Cor:"
+          isRequired
+          options={[
+            { value: "white", label: "Branco" },
+            { value: "black", label: "Preto" },
+            { value: "gray", label: "Cinza" },
+          ]}
+        />
         <Flex gap={3} mt={8}>
           <Text mr={5}>Tamanho:</Text>
           <FormInput
@@ -141,7 +150,7 @@ export default function AddProduct() {
         <Sidebar currentRoute="/add-product" />
         <Box
           as={"form"}
-          onSubmit={handleSubmit((data) => console.log(data))}
+          onSubmit={handleSubmit((data) => api.post("/create-product", data))}
           display={"flex"}
           flexDirection={"column"}
           flex={1}
@@ -165,6 +174,7 @@ export default function AddProduct() {
                     register={register}
                     formState={formState}
                     labelPosition="left"
+                    isRequired
                   />
                 ))}
               </Box>
@@ -178,10 +188,11 @@ export default function AddProduct() {
                   name="categories"
                   multiple
                   options={[
-                    { value: "option1", label: "Cadeira" },
-                    { value: "option2", label: "Mesa" },
-                    { value: "option3", label: "Sofá" },
+                    { value: "chair", label: "Cadeira" },
+                    { value: "table", label: "Mesa" },
+                    { value: "sofa", label: "Sofá" },
                   ]}
+                  isRequired
                 />
               </Box>
               <Box flex={1}>
@@ -194,10 +205,11 @@ export default function AddProduct() {
                   name="tags"
                   multiple
                   options={[
-                    { value: "option1", label: "Madeira escura" },
-                    { value: "option2", label: "Madeira média" },
-                    { value: "option3", label: "Madeira clara" },
+                    { value: "dark_wood", label: "Madeira escura" },
+                    { value: "medium_wood", label: "Madeira média" },
+                    { value: "light_wood", label: "Madeira clara" },
                   ]}
+                  isRequired
                 />
               </Box>
             </Flex>
@@ -214,7 +226,8 @@ export default function AddProduct() {
                   register={register}
                   formState={formState}
                   labelPosition="left"
-                  height={field.height} // !ERR: only one line being used
+                  height={field.height}
+                  isRequired
                 />
               ))}
             </Box>
