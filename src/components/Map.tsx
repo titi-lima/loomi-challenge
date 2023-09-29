@@ -4,7 +4,6 @@ import MapboxGL from "react-mapbox-gl";
 import { FeatureCollection, Polygon } from "geojson";
 import mapboxgl from "mapbox-gl";
 import ReactDOMServer from "react-dom/server";
-import { Box, Button, Flex, Heading } from "@chakra-ui/react";
 import { fingerprint, warehouse } from "@/assets";
 import Image from "next/image";
 
@@ -14,9 +13,11 @@ const Map = MapboxGL({
 
 interface MapProps {
   geojson: FeatureCollection<Polygon>;
+  orders: number;
+  clients: number;
 }
 
-const popupContent = () => {
+const popupContent = (orders: number, clients: number) => {
   return ReactDOMServer.renderToString(
     <div
       style={{
@@ -76,7 +77,7 @@ const popupContent = () => {
                 fontWeight: "bold",
               }}
             >
-              5000
+              {orders}
             </p>
           </div>
           <p
@@ -115,7 +116,7 @@ const popupContent = () => {
                 fontWeight: "bold",
               }}
             >
-              5000
+              {clients}
             </p>
           </div>
           <p
@@ -144,7 +145,7 @@ const popupContent = () => {
   );
 };
 
-const MapComponent = ({ geojson }: MapProps) => {
+const MapComponent = ({ geojson, orders, clients }: MapProps) => {
   const handleStyleLoad = (map: mapboxgl.Map) => {
     map.addSource("highlighted-areas", {
       type: "geojson",
@@ -169,7 +170,7 @@ const MapComponent = ({ geojson }: MapProps) => {
 
         new mapboxgl.Popup({ maxWidth: "500px" })
           .setLngLat([longitude, latitude])
-          .setHTML(popupContent())
+          .setHTML(popupContent(orders, clients))
           .addTo(map);
       }
     });
