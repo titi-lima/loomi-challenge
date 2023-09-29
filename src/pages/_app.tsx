@@ -3,6 +3,7 @@ import { ChakraProvider, Flex, extendTheme } from "@chakra-ui/react";
 import { background } from "@/assets";
 import type { AppProps } from "next/app";
 import { Ubuntu } from "next/font/google";
+import { NavbarProvider } from "@/contexts/UserContext";
 const font = Ubuntu({
   subsets: ["latin"],
   weight: ["300", "400", "500", "700"],
@@ -27,17 +28,19 @@ const theme = extendTheme({
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider theme={theme}>
-      <Flex
-        backgroundImage={background.src}
-        backgroundRepeat={"repeat"}
-        backgroundColor={"gray.100"}
-        className={font.className}
-        direction="column"
-        minHeight="100vh"
-      >
-        <Component {...pageProps} />
-      </Flex>
-    </ChakraProvider>
+    <NavbarProvider>
+      <ChakraProvider theme={theme}>
+        <Flex
+          backgroundImage={background.src}
+          backgroundRepeat={"repeat"}
+          backgroundColor={"gray.100"}
+          className={font.className}
+          direction="column"
+          minHeight="100vh"
+        >
+          <Component {...pageProps} />
+        </Flex>
+      </ChakraProvider>
+    </NavbarProvider>
   );
 }

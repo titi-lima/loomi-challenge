@@ -7,9 +7,11 @@ import Image from "next/image";
 import { api } from "@/services";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/router";
+import { useUser } from "@/contexts/UserContext";
 import React from "react";
 
 export default function Home() {
+  const User = useUser();
   const [isLoading, setIsLoading] = React.useState(false);
   const { register, handleSubmit, formState } = useForm();
   const router = useRouter();
@@ -18,7 +20,8 @@ export default function Home() {
     try {
       const response = await api.post("/login", { body: data });
       setCookie("token", response.data["access-token"]);
-      // save user data to localStorage
+      User.setUsername("Eduardo");
+      User.setProfilePic("E");
       router.push("/home");
     } catch (error) {
       console.log(error);

@@ -1,9 +1,11 @@
 import { logo } from "@/assets";
+import { useUser } from "@/contexts/UserContext";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import React from "react";
 
 const Navbar = () => {
+  const User = useUser();
   return (
     <Box gap={4} bgColor={"white"} width={"100%"} height={"65px"}>
       <Flex
@@ -19,10 +21,10 @@ const Navbar = () => {
       >
         <Image src={logo.src} alt="Logo" width={60} height={60} />
         <Flex gap={4}>
-          <Text alignSelf={"center"}>Eduardo</Text>
+          <Text alignSelf={"center"}>{User.username}</Text>
           <Box w={10} mt={1} h={10} borderRadius={20} bgColor={"#5a4ca77d"}>
             <Text textAlign={"center"} lineHeight={"10"}>
-              E
+              {User.profile_pic}
             </Text>
           </Box>
         </Flex>
