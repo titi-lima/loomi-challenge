@@ -260,7 +260,6 @@ export default function AddProduct() {
           </Box>
           <Flex justifyContent={"flex-end"} gap={4} mt={8}>
             <Button
-              type="submit"
               variant="solid"
               mt={8}
               width={"120px"}
