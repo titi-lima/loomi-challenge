@@ -18,9 +18,13 @@ const Navbar = () => {
         zIndex={1}
       >
         <Image src={logo.src} alt="Logo" width={60} height={60} />
-        <Flex>
+        <Flex gap={4}>
           <Text alignSelf={"center"}>Eduardo</Text>
-          <Image src={logo.src} alt="Foto do usuário" width={60} height={60} />
+          <Box w={10} mt={1} h={10} borderRadius={20} bgColor={"#5a4ca77d"}>
+            <Text textAlign={"center"} lineHeight={"10"}>
+              E
+            </Text>
+          </Box>
         </Flex>
       </Flex>
     </Box>
